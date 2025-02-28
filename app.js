@@ -2,12 +2,14 @@ require('dotenv').config()
 
 const express = require('express')
 const mongoose = require('mongoose')
-const postModel = require('./models/post.model')
+const fileUpload = require('express-fileupload')
 
 const postRoute = require('./routes/post.route')
 const app = express()
 
 app.use(express.json())
+app.use(express.static('static'))
+app.use(fileUpload({}))
 
 app.use('/api/post', postRoute)
 

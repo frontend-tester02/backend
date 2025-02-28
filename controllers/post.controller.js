@@ -1,4 +1,3 @@
-const postModel = require('../models/post.model')
 const postService = require('../server/post.service')
 
 class postContoller {
@@ -13,7 +12,7 @@ class postContoller {
 
 	async create(req, res) {
 		try {
-			const post = await postService.create(req.body)
+			const post = await postService.create(req.body, req.files.picture)
 			res.status(201).json(post)
 		} catch (error) {
 			res.status(500).json(error)
