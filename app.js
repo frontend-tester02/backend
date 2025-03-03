@@ -14,6 +14,7 @@ app.use(express.static('static'))
 app.use(fileUpload({}))
 
 app.use('/api/post', postRoute)
+app.use('/api/auth', require('./routes/auth.route'))
 
 const PORT = process.env.PORT || 8080
 
