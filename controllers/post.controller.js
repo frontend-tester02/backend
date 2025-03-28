@@ -12,11 +12,12 @@ class postContoller {
 
 	async create(req, res, next) {
 		try {
-			const post = await postService.create(
-				req.body,
-				req.files.picture,
-				req.user.id
-			)
+			// const post = await postService.create(
+			// 	req.body,
+			// 	req.files.picture,
+			// 	req.user.id
+			// )
+			const post = await postService.create(req.body, req.files.picture)
 			res.status(201).json(post)
 		} catch (error) {
 			next(error)
