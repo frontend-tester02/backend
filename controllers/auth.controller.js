@@ -27,7 +27,7 @@ class AuthController {
 		try {
 			const userId = req.params.id
 			await authService.activation(userId)
-			return res.redirect('https://shoky.dev')
+			return res.redirect(process.env.CLIENT_URL)
 		} catch (error) {
 			next(error)
 		}

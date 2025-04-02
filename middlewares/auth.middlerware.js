@@ -9,13 +9,11 @@ module.exports = function (req, res, next) {
 		}
 
 		const accessToken = authorization.split(' ')[1]
-
 		if (!accessToken) {
 			return next(BaseError.UnauthorizedError())
 		}
 
 		const userData = tokenService.validateAccessToken(accessToken)
-
 		if (!userData) {
 			return next(BaseError.UnauthorizedError())
 		}

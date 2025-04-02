@@ -73,6 +73,11 @@ function Navbar() {
 									<DropdownMenuLabel className='line-clamp-1'>
 										{user.email}
 									</DropdownMenuLabel>
+									<p className='text-sm text-red-400 text-center'>
+										{user.isActivated
+											? 'User activated'
+											: 'User is not activated'}
+									</p>
 									<DropdownMenuSeparator />
 									<DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
 								</DropdownMenuContent>

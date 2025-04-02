@@ -1,6 +1,6 @@
 import { IPost } from '@/interfaces'
 import { Card, CardContent, CardFooter, CardTitle } from '../ui/card'
-import $axios, { API_URL } from '@/http'
+import { API_URL } from '@/http'
 import { Button } from '../ui/button'
 import { useConfirm } from '@/hooks/use-confirm'
 import { useForm } from 'react-hook-form'
@@ -23,6 +23,7 @@ import { useMutation } from '@tanstack/react-query'
 import { postStore } from '@/store/post.store'
 import { toast } from 'sonner'
 import FillLoading from '../shared/fill-loading'
+import $api from '@/http/api'
 
 function PostCard({ post }: { post: IPost }) {
 	const [open, setOpen] = useState(false)
@@ -46,7 +47,7 @@ function PostCard({ post }: { post: IPost }) {
 	const { mutate, isPending } = useMutation({
 		mutationKey: ['edit-post'],
 		mutationFn: async (values: z.infer<typeof postSchema>) => {
-			const { data } = await $axios.put(`/post/edit/${post._id}`, values)
+			const { data } = await $api.put(`/post/edit/${post._id}`, values)
 			return data
 		},
 
@@ -55,8 +56,9 @@ function PostCard({ post }: { post: IPost }) {
 			setPosts(newData)
 			setOpen(false)
 		},
-		onError: () => {
-			toast('Something went wrong!. Try again!')
+		onError: err => {
+			// @ts-ignore
+			toast(err.response.data.message)
 		},
 	})
 
