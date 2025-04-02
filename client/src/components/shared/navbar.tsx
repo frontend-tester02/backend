@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../ui/button'
 import CreatePost from '../create-post'
 import { useCreatePost } from '@/hooks/use-create-post'
@@ -12,10 +12,28 @@ import {
 	DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
+import $axios from '@/http'
+import { IUser } from '@/interfaces'
 
 function Navbar() {
 	const { onOpen } = useCreatePost()
-	const { isAuth, user } = authStore()
+	const { isAuth, user, isLoading, setIsAuth, setUser } = authStore()
+	const navigate = useNavigate()
+
+	const logout = async () => {
+		try {
+			await $axios.post('/auth/logout')
+			localStorage.removeItem('accessToken')
+			setIsAuth(false)
+			setUser({} as IUser)
+			navigate('/auth')
+		} catch (error) {
+			// @ts-ignore
+			toast(error.response?.data?.message)
+		}
+	}
 
 	return (
 		<>
@@ -30,15 +48,20 @@ function Navbar() {
 					</Link>
 
 					<div className='flex gap-2'>
-						<Button
-							className='rounded-full font-bold cursor-pointer'
-							size={'lg'}
-							variant={'outline'}
-							onClick={onOpen}
-						>
-							Create Post
-						</Button>
-						{isAuth ? (
+						{isAuth && (
+							<Button
+								className='rounded-full font-bold cursor-pointer'
+								size={'lg'}
+								variant={'outline'}
+								onClick={onOpen}
+							>
+								Create Post
+							</Button>
+						)}
+
+						{isLoading ? (
+							<Loader2 className='animate-spin' />
+						) : isAuth ? (
 							<DropdownMenu>
 								<DropdownMenuTrigger asChild>
 									<Avatar className='cursor-pointer'>
@@ -51,7 +74,7 @@ function Navbar() {
 										{user.email}
 									</DropdownMenuLabel>
 									<DropdownMenuSeparator />
-									<DropdownMenuItem>Logout</DropdownMenuItem>
+									<DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
 								</DropdownMenuContent>
 							</DropdownMenu>
 						) : (
